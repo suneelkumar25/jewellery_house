@@ -1,7 +1,7 @@
 const postOperations = require('../operations/postOperations');
 
 module.exports = {
-  jewellery_registration_post: async (req, res) => {
+    jewellery_registration_post: async (req, res) => {
     try {
       const { userName, userCode, userEmail, password } = req.body;
       const requiredFields = ['userName', 'userCode', 'userEmail', 'password'];
@@ -16,7 +16,8 @@ module.exports = {
       return res.status(500).json({ status: false, message: `internal server error. ${error}` });
     }
   },
-  jewellery_categories_post: async (req, res) => {
+
+    jewellery_categories_post: async (req, res) => {
     try {
       const { name, description } = req.body;
       const requiredFields = ['name', 'description'];
@@ -33,5 +34,22 @@ module.exports = {
     }
 
   },
-  
+
+    jewellery_products_post: async (req, res) => {
+  try {
+    const { name, sku_code, price, final_price, material, purity } = req.body;
+    const requiredFields = ['name', 'sku_code', 'price', 'final_price', 'material', 'purity'];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({status: false, message: `${field.replace('_', ' ')} is required.`});
+      }
+    }
+    const productsResult = await postOperations.jewellery_products_post(name, sku_code, price, final_price, material, purity);
+    console.log(productsResult, "productsResult");
+    return res.status(200).json({status: true, message: 'Products inserted successfully.', result: productsResult});
+  } catch (error) {
+    return res.status(500).json({status: false, message: `Internal Server Error: ${error}`});
+  }
+}
+
 }

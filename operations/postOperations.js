@@ -1,5 +1,6 @@
 const connection = require('../config/database')
 const bcrypt = require('bcrypt');
+const { jewellery_products_post } = require('../controller/postController');
 const saltRounds = 10
 
 
@@ -30,7 +31,7 @@ module.exports = {
           }
           resolve({ status: true, message: `Inserted Data Sucessfuly`, result: insertResult });
         })
-      });
+      });  
     })
   },
   jewellery_categories_post: (name, description) =>{
@@ -44,6 +45,17 @@ module.exports = {
         }
         resolve({ status: true, message: `inserted Data Sucessfuly`, result: insertResult});
       })
+    })
+  },
+  jewellery_products_post: (name, sku_code, price, final_price, material, purity) => {
+    const insertQuery =`insert into jewellery_products (name, sku_code, price, final_price, material, purity) values (?, ?, ?, ?, ?, ?)`;
+    const insertValues = [name, sku_code, price, final_price, material, purity];
+    connection.execute(insertQuery, insertValues, (insertError, insertResult) => {
+      if(insertError){
+        console.log(insertError, "InsertError");
+          return reject(`Error while inserting tha data.`)
+      }
+        resolve({ status : true, massage: `inserted data Sucessfuly`, result: insertResult});
     })
   }
 };
